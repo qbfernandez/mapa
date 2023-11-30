@@ -295,10 +295,11 @@ var onSingleClick = function(evt) {
               // Obtener la URL de la columna "post"
             var postUrl = currentFeature.get('post');
             if (postUrl) {
-                // Utilizar window.setTimeout para manejar la asincronía
-                window.setTimeout(function() {
-                    // Abrir una nueva ventana con la URL del post
+                // Utilizar setImmediate() y setTimeout() para manejar la asincronía
+                setImmediate(function() {
                     window.open(postUrl, '_blank');
+                });
+                setTimeout(function() {
                 }, 0);
             }
         }
