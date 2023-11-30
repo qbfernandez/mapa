@@ -8,8 +8,6 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="./resources/ol.css">
         <link rel="stylesheet" href="resources/fontawesome-all.min.css">
-        <link rel="stylesheet" type="text/css" href="resources/horsey.min.css">
-        <link rel="stylesheet" type="text/css" href="resources/ol3-search-layer.min.css">
         <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
         <link rel="stylesheet" href="./resources/qgis2web.css">
 <style>
@@ -23,7 +21,7 @@
 </style>
         <style>
         html, body {
-            background-color: #ffffff;
+            background-color: #bde6e0;
         }
         .ol-control button {
             background-color: #f8f8f8 !important;
@@ -45,9 +43,31 @@
         }
         </style>
         <style>
-        #map {
-            width: 1570px;
-            height: 1154px;
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <style> .ol-popup {
+            background-color: rgb(238, 238, 238); /* Color de fondo del popup (sRGB 238, 238, 238) */
+            border: 2px solid rgb(187, 230, 224); /* Borde del popup (sRGB 187, 230, 224) */
+            border-radius: 4px; /* Bordes redondeados del popup */
+            padding: 10px; /* Espaciado interno del popup */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra del popup */
+            width: 250px; /* Ancho fijo del popup (cambiado a 250px) */
+        }
+        </style>
+        <style> #popup-content {
+            color: rgb(48, 56, 65); /* Color del texto dentro del popup (sRGB 48, 56, 65) */
+            font-size: 12px; /* Tamaño de fuente del texto dentro del popup (cambiado a 11px) */
+            font-family: 'Quicksand', Arial, sans-serif; /* Tipo de letra del contenido del popup (cambiado a 'Quicksand', Arial, sans-serif) */
+        }
+        </style>
+        <style> .ol-popup-closer {
+            color: rgb(187, 230, 224); /* Color del icono de cierre del popup (sRGB 187, 230, 224) */
+            font-size: 10px; /* Tamaño de fuente del icono de cierre del popup */
         }
         </style>
         <title></title>
@@ -63,12 +83,9 @@
         <script src="resources/polyfills.js"></script>
         <script src="./resources/functions.js"></script>
         <script src="./resources/ol.js"></script>
-        <script src="http://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList,URL"></script>
-        <script src="resources/horsey.min.js"></script>
-        <script src="resources/ol3-search-layer.js"></script>
         <script src="./resources/ol-layerswitcher.js"></script>
-        <script src="layers/WB_countries_Admin0_10m_1.js"></script>
-        <script src="styles/WB_countries_Admin0_10m_1_style.js"></script>
+        <script src="layers/CNTR_BN_10M_2020_4326_1.js"></script><script src="layers/PAISESNOVISTADOS_2.js"></script><script src="layers/provinciasES_3.js"></script><script src="layers/comunidadesES_4.js"></script><script src="layers/ESPAA_5.js"></script><script src="layers/PORTUGAL_6.js"></script><script src="layers/PORTUGALzoommaximo_7.js"></script><script src="layers/PORTUGALregiones_8.js"></script><script src="layers/PORTUGALconcejos_9.js"></script><script src="layers/PORTUGALrutasdeviaje_10.js"></script><script src="layers/PORTUGALtodos_11.js"></script><script src="layers/PORTUGALdestacados_12.js"></script><script src="layers/regionesFR_13.js"></script><script src="layers/FRANCIA_14.js"></script><script src="layers/regionesIT_15.js"></script><script src="layers/ITALIA_16.js"></script><script src="layers/regionesBE_17.js"></script><script src="layers/BLGICA_18.js"></script><script src="layers/regionesHL_19.js"></script><script src="layers/HOLANDA_20.js"></script><script src="layers/regionesAL_21.js"></script><script src="layers/ALEMANIA_22.js"></script><script src="layers/regionesRC_23.js"></script><script src="layers/REPCHECA_24.js"></script><script src="layers/regionesRO_25.js"></script><script src="layers/RUMANIA_26.js"></script><script src="layers/regionesMA_27.js"></script><script src="layers/MARRUECOS_28.js"></script><script src="layers/regionesCU_29.js"></script><script src="layers/CUBA_30.js"></script><script src="layers/marcaspio_31.js"></script><script src="layers/pinpaisvisitado_32.js"></script>
+        <script src="styles/CNTR_BN_10M_2020_4326_1_style.js"></script><script src="styles/PAISESNOVISTADOS_2_style.js"></script><script src="styles/provinciasES_3_style.js"></script><script src="styles/comunidadesES_4_style.js"></script><script src="styles/ESPAA_5_style.js"></script><script src="styles/PORTUGAL_6_style.js"></script><script src="styles/PORTUGALzoommaximo_7_style.js"></script><script src="styles/PORTUGALregiones_8_style.js"></script><script src="styles/PORTUGALconcejos_9_style.js"></script><script src="styles/PORTUGALrutasdeviaje_10_style.js"></script><script src="styles/PORTUGALtodos_11_style.js"></script><script src="styles/PORTUGALdestacados_12_style.js"></script><script src="styles/regionesFR_13_style.js"></script><script src="styles/FRANCIA_14_style.js"></script><script src="styles/regionesIT_15_style.js"></script><script src="styles/ITALIA_16_style.js"></script><script src="styles/regionesBE_17_style.js"></script><script src="styles/BLGICA_18_style.js"></script><script src="styles/regionesHL_19_style.js"></script><script src="styles/HOLANDA_20_style.js"></script><script src="styles/regionesAL_21_style.js"></script><script src="styles/ALEMANIA_22_style.js"></script><script src="styles/regionesRC_23_style.js"></script><script src="styles/REPCHECA_24_style.js"></script><script src="styles/regionesRO_25_style.js"></script><script src="styles/RUMANIA_26_style.js"></script><script src="styles/regionesMA_27_style.js"></script><script src="styles/MARRUECOS_28_style.js"></script><script src="styles/regionesCU_29_style.js"></script><script src="styles/CUBA_30_style.js"></script><script src="styles/marcaspio_31_style.js"></script><script src="styles/pinpaisvisitado_32_style.js"></script>
         <script src="./layers/layers.js" type="text/javascript"></script> 
         <script src="./resources/Autolinker.min.js"></script>
         <script src="./resources/qgis2web.js"></script>

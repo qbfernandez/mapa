@@ -1,5 +1,3 @@
-
-
 var container = document.getElementById('popup');
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
@@ -10,6 +8,7 @@ closer.onclick = function() {
     closer.blur();
     return false;
 };
+
 var overlayPopup = new ol.Overlay({
     element: container
 });
@@ -27,55 +26,26 @@ var map = new ol.Map({
     overlays: [overlayPopup],
     layers: layersList,
     view: new ol.View({
-         maxZoom: 28, minZoom: 1
+         maxZoom: 9, minZoom: 3
     })
 });
 
-var layerSwitcher = new ol.control.LayerSwitcher({tipLabel: "Layers"});
-map.addControl(layerSwitcher);
-layerSwitcher.hidePanel = function() {};
-layerSwitcher.showPanel();
+map.getView().fit([-1116385.071634, 4592354.804153, -815996.497554, 4824134.869350], map.getSize());
 
+var NO_POPUP = 0;
+var ALL_FIELDS = 1;
 
-    var searchLayer = new SearchLayer({
-      layer: lyr_WB_countries_Admin0_10m_1,
-      colName: 'NAME_DE',
-      zoom: 10,
-      collapsed: true,
-      map: map
-    });
-
-    map.addControl(searchLayer);
-    document.getElementsByClassName('search-layer')[0]
-    .getElementsByTagName('button')[0].className +=
-    ' fa fa-binoculars';
-    
-map.getView().fit([-763032.828421, 4205657.537434, 206872.316703, 5117351.285868], map.getSize());
-
-var NO_POPUP = 0
-var ALL_FIELDS = 1
-
-/**
- * Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
- * a given layer
- * @param layerList {Array} List of ol.Layer instances
- * @param layer {ol.Layer} Layer to find field info about
- */
 function getPopupFields(layerList, layer) {
-    // Determine the index that the layer will have in the popupLayers Array,
-    // if the layersList contains more items than popupLayers then we need to
-    // adjust the index to take into account the base maps group
     var idx = layersList.indexOf(layer) - (layersList.length - popupLayers.length);
     return popupLayers[idx];
 }
-
 
 var collection = new ol.Collection();
 var featureOverlay = new ol.layer.Vector({
     map: map,
     source: new ol.source.Vector({
         features: collection,
-        useSpatialIndex: false // optional, might improve performance
+        useSpatialIndex: false
     }),
     style: [new ol.style.Style({
         stroke: new ol.style.Stroke({
@@ -86,12 +56,12 @@ var featureOverlay = new ol.layer.Vector({
             color: 'rgba(255,0,0,0.1)'
         }),
     })],
-    updateWhileAnimating: true, // optional, for instant visual feedback
-    updateWhileInteracting: true // optional, for instant visual feedback
+    updateWhileAnimating: true,
+    updateWhileInteracting: true
 });
 
-var doHighlight = true;
-var doHover = false;
+var doHighlight = false;
+var doHover = true;
 
 var highlight;
 var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -108,9 +78,6 @@ var onPointerMove = function(evt) {
     var clusteredFeatures;
     var popupText = '<ul>';
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        // We only care about features from layers in the layersList, ignore
-        // any other layers which the map might contain such as the vector
-        // layer used by the measure tool
         if (layersList.indexOf(layer) === -1) {
             return;
         }
@@ -134,7 +101,7 @@ var onPointerMove = function(evt) {
                         if (currentFeatureKeys[i] != 'geometry') {
                             popupField = '';
                             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
-                            popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
+                                popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
                             } else {
                                 popupField += '<td colspan="2">';
                             }
@@ -175,7 +142,7 @@ var onPointerMove = function(evt) {
                         popupText += '<tr>' + popupField + '</tr>';
                     }
                 }
-                popupText += '</table></li>';
+                popupText += '</table>';
             }
         }
     });
@@ -199,7 +166,7 @@ var onPointerMove = function(evt) {
                     highlightStyle = new ol.style.Style({
                         image: new ol.style.Circle({
                             fill: new ol.style.Fill({
-                                color: "#ff9e17"
+                                color: "#e3e3de"
                             }),
                             radius: radius
                         })
@@ -210,7 +177,7 @@ var onPointerMove = function(evt) {
 
                     highlightStyle = new ol.style.Style({
                         stroke: new ol.style.Stroke({
-                            color: '#ff9e17',
+                            color: '#e3e3de',
                             lineDash: null,
                             width: featureWidth
                         })
@@ -219,7 +186,7 @@ var onPointerMove = function(evt) {
                 } else {
                     highlightStyle = new ol.style.Style({
                         fill: new ol.style.Fill({
-                            color: '#ff9e17'
+                            color: '#e3e3de'
                         })
                     })
                 }
@@ -249,10 +216,12 @@ var onSingleClick = function(evt) {
     if (sketch) {
         return;
     }
+
     var pixel = map.getEventPixel(evt.originalEvent);
     var coord = evt.coordinate;
     var popupField;
     var currentFeature;
+    var currentLayer;
     var currentFeatureKeys;
     var clusteredFeatures;
     var popupText = '<ul>';
@@ -265,6 +234,7 @@ var onSingleClick = function(evt) {
                 }
             }
             currentFeature = feature;
+            currentLayer = layer;
             clusteredFeatures = feature.get("features");
             var clusterFeature;
             if (typeof clusteredFeatures !== "undefined") {
@@ -321,8 +291,16 @@ var onSingleClick = function(evt) {
                     popupText += '</table>';
                 }
             }
+
+            // Obtener la URL de la columna "post"
+            var postUrl = currentFeature.get('post');
+            if (postUrl) {
+                // Abrir una nueva ventana con la URL del post
+                window.open(postUrl, '_blank');
+            }
         }
     });
+
     if (popupText == '<ul>') {
         popupText = '';
     } else {
@@ -334,7 +312,7 @@ var onSingleClick = function(evt) {
     for (i = 0; i < wms_layers.length; i++) {
         if (wms_layers[i][1]) {
             var url = wms_layers[i][0].getSource().getGetFeatureInfoUrl(
-                evt.coordinate, viewResolution, viewProjection,
+                                evt.coordinate, viewResolution, viewProjection,
                 {
                     'INFO_FORMAT': 'text/html',
                 });
@@ -354,17 +332,12 @@ var onSingleClick = function(evt) {
     }
 };
 
-
-
 map.on('pointermove', function(evt) {
     onPointerMove(evt);
 });
 map.on('singleclick', function(evt) {
     onSingleClick(evt);
 });
-
-
-
 
 var attributionComplete = false;
 map.on("rendercomplete", function(evt) {
@@ -383,4 +356,4 @@ map.on("rendercomplete", function(evt) {
         attributionList.insertBefore(qgisAttribution, firstLayerAttribution);
         attributionComplete = true;
     }
-})
+});
