@@ -300,7 +300,7 @@ var onSingleClick = function(evt) {
                     window.open(postUrl, '_blank');
                 });
                 setTimeout(function() {
-                }, 0);
+                }, 1000);
             }
         }
     });
