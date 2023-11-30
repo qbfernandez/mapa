@@ -300,7 +300,7 @@ var onSingleClick = function(evt) {
                     window.open(postUrl, '_blank');
                 });
                 setTimeout(function() {
-                }, 1000);
+                }, 0);
             }
         }
     });
@@ -340,7 +340,15 @@ map.on('pointermove', function(evt) {
     onPointerMove(evt);
 });
 map.on('singleclick', function(evt) {
-    onSingleClick(evt);
+  var features = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+    return feature;
+  });
+
+  if (features.length > 0) {
+    var feature = features[0];
+    var url = feature.get('post');
+    window.open(url, '_blank');
+  }
 });
 
 var attributionComplete = false;
