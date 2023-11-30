@@ -292,11 +292,14 @@ var onSingleClick = function(evt) {
                 }
             }
 
-            // Obtener la URL de la columna "post"
+              // Obtener la URL de la columna "post"
             var postUrl = currentFeature.get('post');
             if (postUrl) {
-                // Abrir una nueva ventana con la URL del post
-                window.open(postUrl, '_blank');
+                // Utilizar window.setTimeout para manejar la asincronía
+                window.setTimeout(function() {
+                    // Abrir una nueva ventana con la URL del post
+                    window.open(postUrl, '_blank');
+                }, 0);
             }
         }
     });
